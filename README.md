@@ -20,7 +20,8 @@ Price data from top 20 market capitalization stocks in 11 GIC sectors which in t
 ### singleStock.csv
 The price data from AAR Corp. (AIR). The date of price ranges from 2017/10/09 to 2018/10/08 which matches the dates in universe.csv
 
-### portfolio.csv
+### portfolio.csv  
+The portfolio price data from 2017/10/09 to 2018/10/08. The portfolio includes AIR, MMM, DIS and UPS.
 
 
 
