@@ -7,6 +7,10 @@ Report any bugs by opening an issue here: https://github.com/KaihuaHuang/VaR/iss
   
 # Input data requirements
 ## Historical VaR
-
+The data should ascend by date which means the last row is most updated date  
+  
+## PCA VaR
+The date of portfolio date should match the date of universe data  
+For example, the first row of portfolio price data and universe price data comes from the same day. This part can be done by my another library FinanceData
 
 
