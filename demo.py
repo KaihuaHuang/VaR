@@ -46,7 +46,8 @@ if __name__ =='__main__':
 
 	print('\n-------Portfolio PCA VaR---------')
 	data = pd.read_csv('Data/portfolio.csv', index_col='date', dtype=float, parse_dates=True)
-	PDemoValidation.changePortfolio(data,weights)
+	PDemoValidation.setPortfolio(data)
+	PDemoValidation.setWeights(weights)
 	print('Portfolio PCA VaR(Percentage):', PDemoValidation.var() * 100, '%')
 	print('Portfolio PCA VaR(Percentage)-Approximation:', PDemoValidation.var(approximation=True) * 100, '%')
 

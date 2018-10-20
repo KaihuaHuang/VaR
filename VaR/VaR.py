@@ -73,6 +73,8 @@ class ValueAtRisk:
 		# window: scale time period, default value is 252 which returns annualized VaR
 		# ----output----
 		# Value at Risk in dollar or percentage if input market value is zero
+		if(self.returnMatrix.shape[1] != len(self.weights)):
+			raise Exception("The weights and portfolio doesn't match")
 		self.calculateVariance(Approximation)
 		if(marketValue <= 0):
 			return abs(norm.ppf(self.ci)*np.sqrt(self.variance))*math.sqrt(window)
@@ -89,9 +91,21 @@ class ValueAtRisk:
 		else:
 			raise Exception("Invalid confidence interval", interval)
 
+	def setPortfolio(self,matrix):
+		# Change the current portfolio's data and weights
+		# ----Input-----
+		# matrix: stock price matrix, each row represents one day price for different tickers, two dimensions ndarray
+		# ----output----
+		if (isinstance(matrix, pd.DataFrame)):
+			matrix = matrix.values
+
+		if (matrix.ndim != 2):
+			raise Exception("Only accept 2 dimensions matrix", matrix.ndim)
+
+		self.input = matrix
+		self.returnMatrix = np.diff(np.log(self.input), axis=0)
+
 	def setWeights(self,weights):
-		if (len(weights) != self.input.shape[1]):
-			raise Exception("Weights Length doesn't match")
 		if (not isinstance(weights, np.ndarray)):
 			self.weights = np.array(weights)
 		else:

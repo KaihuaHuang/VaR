@@ -59,13 +59,7 @@ class PCAVaR(ValueAtRisk):
 		return reg.coef_.T
 
 
-	def changePortfolio(self,matrix,weights):
-		# Change the current portfolio's data and weights
-		# ----Input-----
-		# matrix: stock price matrix, each row represents one day price for different tickers, two dimensions ndarray
-		# weight: the weight for portfolio, one dimension ndarray, default value is 1 which means there is only 1 stock in portfolio
-		# ----output----
-		ValueAtRisk.__init__(self, self.ci, matrix, weights)
+
 
 
 	def var(self,marketValue = 0,window = 252,approximation = False):
