@@ -88,3 +88,11 @@ class ValueAtRisk:
             self.ci = interval
         else:
             raise Exception("Invalid confidence interval", interval)
+
+	def setWeights(self,weights):
+		if (len(weights) != self.input.shape[1]):
+			raise Exception("Weights Length doesn't match")
+		if (not isinstance(weights, np.ndarray)):
+			self.weights = np.array(weights)
+		else:
+			self.weights = weights
