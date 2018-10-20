@@ -34,7 +34,10 @@ class ValueAtRisk:
 		
 		# log return calculation
         self.returnMatrix = np.diff(np.log(self.input),axis=0)
-        self.weights = weights
+        if (not isinstance(weights, np.ndarray)):
+            self.weights = np.array(weights)
+        else:
+            self.weights = weights
 
     def covMatrix(self):
 		# return variance-covariance matrix using return matrix
