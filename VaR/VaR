@@ -21,7 +21,10 @@ class ValueAtRisk:
             self.ci = interval
         else:
             raise Exception("Invalid confidence interval", interval)
-        
+			
+        if(isinstance(matrix,pd.DataFrame)):
+            matrix = matrix.values
+			
         if(matrix.ndim!=2):
             raise Exception("Only accept 2 dimensions matrix", matrix.ndim)
         
