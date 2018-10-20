@@ -47,7 +47,7 @@ class ValueAtRisk:
         # ----Input-----
         # interval: significant interval in statistic, range from 0 to 1
         # matrix: stock price matrix, each row represents one day price for different tickers, two dimentions ndarray
-        # weight: the weight for portfolio, one dimention ndarray
+        # weight: the weight for portfolio, one dimension ndarray
         # ----output----
         # variance-covariance matrix
         return np.cov(self.returnMatrix.T)
