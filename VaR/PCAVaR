@@ -1,0 +1,103 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jul 25 23:05:57 2018
+
+@author: William Huang
+"""
+
+from VaR import ValueAtRisk
+from Data import FinanceData
+import numpy as np
+from scipy.stats import norm
+from sklearn.decomposition import PCA
+from sklearn.linear_model import LinearRegression
+import pandas as pd
+import math
+
+
+
+class PCAVaR(ValueAtRisk):
+    def __init__(self,interval,matrix):
+        if(interval > 0 and interval < 1):
+            self.ci = interval
+        else:
+            raise Exception("Invalid confidence interval", interval)
+        
+        if(matrix.ndim!=2):
+            raise Exception("Only accept 2 dimensions matrix", matrix.ndim)
+        
+        #if(sum(weights)>1 or sum(weights)<0.99999):
+        #    raise Exception("Weights sum up should equal to 1", sum(weights))
+        
+
+        self.input = matrix
+        self.returnMatrix = np.diff(self.input,axis = 0)/self.input[1:]
+
+    
+    def getComponents(self,n_components = 2):
+        if(self.input.shape[1]<n_components):
+            raise Exception("Too many PCA Components")
+        pca = PCA(n_components=n_components)
+        pca.fit(self.returnMatrix)
+        self.betaMatrix = pca.components_
+        self.factorMatrix = np.dot(self.returnMatrix,self.betaMatrix.T)
+        self.factorCovVarMat = np.cov(self.factorMatrix.T)
+        self.CovVarMat = np.dot(np.dot(self.betaMatrix.T,self.factorCovVarMat),self.betaMatrix)
+        return
+
+
+    #returns should consistent with factor matrix
+    def betaRegression(self,returns):
+        reg = LinearRegression().fit(self.factorMatrix, returns)
+        self.betaMatrix = reg.coef_.T
+        return reg.coef_.T
+
+    #prices should match the universal prices by date
+    def varSingle(self,prices,marketValue = 0,window = 252):
+        if(isinstance(prices,np.ndarray)):
+            prices = np.reshape(prices,(-1,1))
+            returns = np.diff(prices, axis=0) / prices[1:]
+        else:
+            returns = np.diff(prices.values, axis=0) / prices.values[1:]
+        self.betaRegression(returns)
+        self.CovVarMat = np.dot(np.dot(self.betaMatrix.T, self.factorCovVarMat), self.betaMatrix)
+        self.variance = self.CovVarMat[0,0]
+        if (marketValue <= 0):
+            return abs(norm.ppf(self.ci) * np.sqrt(self.variance)) * math.sqrt(window)
+        else:
+            return marketValue * abs(norm.ppf(self.ci) * np.sqrt(self.variance)) * math.sqrt(window)
+
+    def varPortfolio(self,portfolioData,weights, marketValue = 0, window = 252, approximation = False):
+        if(not isinstance(weights,np.ndarray)):
+            weights = np.array(weights)
+        if(isinstance(portfolioData,pd.DataFrame)):
+            portfolioData = portfolioData.values
+        if(approximation):
+            portfolioReturn = np.dot(portfolioData,weights)
+            return self.varSingle(portfolioReturn,marketValue,window)
+        else:
+            colNum = portfolioData.shape[1]
+            betas = []
+            for i in range(colNum):
+                singlePrice = portfolioData[:,i]
+                singleReturn = np.diff(singlePrice, axis=0) / singlePrice[1:]
+                betas.append(list(self.betaRegression(singleReturn)))
+            self.betaMatrix = np.array(betas).T
+            self.CovVarMat = np.dot(np.dot(self.betaMatrix.T, self.factorCovVarMat), self.betaMatrix)
+            self.variance = np.dot(np.dot(weights,self.CovVarMat),weights.T)
+            if (marketValue <= 0):
+                return abs(norm.ppf(self.ci) * np.sqrt(self.variance)) * math.sqrt(window)
+            else:
+                return marketValue * abs(norm.ppf(self.ci) * np.sqrt(self.variance)) * math.sqrt(window)
+
+
+
+
+    def var(self,weights,marketValue = 0,window = 252):
+        self.weights = weights
+        self.variance = np.dot(np.dot(self.weights,self.CovVarMat),self.weights.T)
+        if(marketValue <= 0):
+            return abs(norm.ppf(self.ci)*np.sqrt(self.variance))*math.sqrt(window)
+        else:
+            return marketValue * abs(norm.ppf(self.ci)*np.sqrt(self.variance))*math.sqrt(window)
+
