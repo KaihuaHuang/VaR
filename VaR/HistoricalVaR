@@ -11,7 +11,7 @@ class HistoricalVaR(ValueAtRisk):
     def var(self,marketValue=0,window = 0):
         # return historical VaR
 		# ----Input-----
-		# marketValue: the market value of portfolio, if the value less or equal zero, function will return persentage
+		# marketValue: the market value of portfolio, if the value less or equal zero, function will return percentage
 		# window: look back period, if window is zero, it will use whole input price series
 		# ----output----
 		# Value at Risk in dollar or percentage if input market value is lee or equal zero
