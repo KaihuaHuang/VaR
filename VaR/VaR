@@ -69,7 +69,7 @@ class ValueAtRisk:
     def var(self,marketValue = 0,Approximation = False,window = 252):
 		# return parametric value at risk, the variance can be calculated by either cov matrix way or approximate way, scale the one day VaR according to user specified time period
 		# ----Input-----
-		# marketValue: the market value of portfolio, if the value is less or equal zero, function will return persentage result
+		# marketValue: the market value of portfolio, if the value is less or equal zero, function will return percentage result
 		# approximation:  If true, using portfolio return to calculate variance. If false, using cov-var matrix to calculate
 		# window: scale time period, default value is 252 which returns annualized VaR
 		# ----output----
