@@ -80,7 +80,7 @@ class PCAVaR(ValueAtRisk):
 		betas = []
 		for i in range(colNum):
 			singlePrice = input[:, i]
-			singleReturn = np.diff(singlePrice, axis=0) / singlePrice[1:]
+			singleReturn = np.diff(np.log(singlePrice), axis=0)
 			betas.append(list(self.betaRegression(singleReturn)))
 		self.betaMatrix = np.array(betas).T
 		self.CovVarMat = np.dot(np.dot(self.betaMatrix.T, self.factorCovVarMat), self.betaMatrix)
