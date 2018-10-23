@@ -15,7 +15,7 @@ class ValueAtRisk:
 		# ----Input-----
 		# interval: significant interval in statistic, range from 0 to 1
 		# matrix: stock price matrix, each row represents one day price for different tickers, two dimentions ndarray
-		# weight: the weight for portfolio, one dimention ndarray
+		# weight: the weight for portfolio, one dimension array
 		# ----output----
 		if(interval > 0 and interval < 1):
 			self.ci = interval
@@ -47,7 +47,7 @@ class ValueAtRisk:
 		# ----Input-----
 		# interval: significant interval in statistic, range from 0 to 1
 		# matrix: stock price matrix, each row represents one day price for different tickers, two dimentions ndarray
-		# weight: the weight for portfolio, one dimension ndarray
+		# weight: the weight for portfolio, one dimension array
 		# ----output----
 		# variance-covariance matrix
 		return np.cov(self.returnMatrix.T)
@@ -106,6 +106,10 @@ class ValueAtRisk:
 		self.returnMatrix = np.diff(np.log(self.input), axis=0)
 
 	def setWeights(self,weights):
+		# set the weights for the portfolio
+		# ----Input-----
+		# interval: the weight for portfolio, one dimension array
+		# ----output----
 		if (not isinstance(weights, np.ndarray)):
 			self.weights = np.array(weights)
 		else:

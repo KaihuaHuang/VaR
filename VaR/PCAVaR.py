@@ -21,7 +21,7 @@ class PCAVaR(ValueAtRisk):
 		# interval: significant interval in statistic, range from 0 to 1
 		# matrix: stock price matrix, each row represents one day price for different tickers, two dimensions ndarray
 		# universe: the stock universe to generate PCA components
-		# weight: the weight for portfolio, one dimension ndarray, default value is 1 which means there is only 1 stock in portfolio
+		# weight: the weight for portfolio, one dimension array, default value is 1 which means there is only 1 stock in portfolio
 		# ----output----
 		if(len(matrix)!=len(universe)):
 			raise Exception('The length of input data and the length of universe data should match')
